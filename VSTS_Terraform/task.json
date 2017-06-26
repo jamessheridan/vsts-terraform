@@ -1,0 +1,49 @@
+{
+  "id": "a4c867ac-5497-4ec9-8ba0-2227e33c93e2",
+  "name": "VSTS Terraform",
+  "friendlyName": "Run Terraform",
+  "description": "Run Terraform on the build agent",
+  "helpMarkDown": "[More Information](https://github.com/jamessheridan/vsts-terraform)",
+  "category": "Deploy",
+  "visibility": [ "Build", "Release" ],
+  "author": "James Sheridan",
+  "version": {
+    "Major": 2,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "demands": [ "azureps" ],
+  "minimumAgentVersion": "1.95.0",
+  "inputs": [
+    {
+      "name": "RunPath",
+      "type": "filePath",
+      "label": "Run path",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Path to invoke Terraform from. This should be where your primary Terraform configurations (.tf) live."
+    },
+    {
+      "name": "Arguments",
+      "type": "string",
+      "label": "Terraform arguments",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Argument(s) to pass to Terraform (eg. init, plan, apply, etc.)"
+    },
+    {
+      "name": "Version",
+      "type": "string",
+      "label": "Terraform version",
+      "defaultValue": "latest",
+      "required": true,
+      "helpMarkDown": "Version of Terraform to use. Defaults to 'latest'."
+     }
+  ],
+  "instanceNameFormat": "Terraform $(Arguments)",
+  "execution": {
+    "PowerShell3": {
+      "target": "$(currentDirectory)\\Terraform.ps1"
+    }
+  }
+}

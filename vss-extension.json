@@ -1,0 +1,71 @@
+{
+  "manifestVersion": 1,
+  "id": "vsts-terraform",
+  "name": "VSTS Terraform",
+  "version": "2.0.4",
+  "publisher": "jamessheridan",
+  "public": false,
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "description": "Build extension that enables you to run Terraform via a build agent.",
+  "categories": [
+    "Build and release"
+  ],
+  "tags": [
+    "terraform",
+    "release",
+    "build",
+    "azure",
+    "azurerm",
+    "aws",
+    "cloud",
+    "Hashicorp",
+    "deploy",
+    "template"
+  ],
+  "content": {
+    "details": {
+      "path": "VSTS_Terraform/readme.md"
+    },
+    "license": {
+      "path": "VSTS_Terraform/license.txt"
+    }
+  },
+  "links": {
+    "getstarted": {
+      "uri": "https://github.com/jamessheridan/vsts_terraform"
+    },
+    "support": {
+      "uri": "https://github.com/jamessheridan/vsts_terraform"
+    }
+  },
+  "branding": {
+    "color": "rgb(36, 43, 50)",
+    "theme": "dark"
+  },
+  "icons": {
+    "default": "VSTS_Terraform/images/terraform.png"
+  },
+  "files": [
+    {
+      "path": "VSTS_Terraform",
+      "addressable": true
+    }
+  ],
+
+  "contributions": [
+    {
+      "id": "VSTS Terraform",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "VSTS_Terraform"
+      }
+    }
+  ]
+}
