@@ -63,10 +63,12 @@ function get_terraform
 
 function run_terraform
 {
-    $argumentents = Get-VstsInput -Name Arguments -Require
+    $arguments = Get-VstsInput -Name Arguments -Require
+    $command = "terraform $arguments"
+
+    Write-Host "Running: $command"
     
-    Write-Host "Running: terraform $argumentents"
-    terraform $argumentents
+    Invoke-Expression $command
 
     if ($LASTEXITCODE)
     {

@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "id": "vsts-terraform",
   "name": "VSTS Terraform",
-  "version": "2.1.2",
+  "version": "2.1.4",
   "publisher": "jamessheridan",
   "public": false,
   "targets": [
