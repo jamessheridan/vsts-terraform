@@ -2,12 +2,22 @@ Trace-VstsEnteringInvocation $MyInvocation
 
 function get_terraform
 {
-    $version = Get-VstsInput -Name Version
-    $terraformbaseurl = "https://releases.hashicorp.com/terraform/"
-    $path = "c:\terraform-download"
+  $terraform_path = "c:\terraform-dl"
+  $terraform_version = Get-VstsInput -Name Version
+  $terraform_baseurl = "https://releases.hashicorp.com/terraform/"
+
+  If (Test-Path $terraform_path){
+    Write-Output "Terraform already installed on agent"
+    $P = [Environment]::GetEnvironmentVariable("PATH")
+    if($P -notlike "*"+$terraform_path+"*")
+    {
+        [Environment]::SetEnvironmentVariable("PATH", "$P;$terraform_path")
+    }
+    terraform -version
+  } Else {
     $regex = """/terraform/([0-9]+\.[0-9]+\.[0-9]+)/"""
     $web = New-Object Net.WebClient
-    $webpage = $web.DownloadString($terraformbaseurl)
+    $webpage = $web.DownloadString($terraform_baseurl)
     $versions = $webpage -split "`n" | Select-String -pattern $regex -AllMatches | % { $_.Matches | % { $_.Groups[1].Value } }
     $latest = $versions[0]
     if ($version -eq "latest")
@@ -16,24 +26,24 @@ function get_terraform
     }
     else
     {
-        if (-not $versions.Contains($version))
+        if (-not $versions.Contains($terraform_version))
         {   
-            throw [System.Exception] "$version not found."    
+            throw [System.Exception] "$terraform_version not found."    
         }
     }
 
     $tempfile = [System.IO.Path]::GetTempFileName()
-    $source = "https://releases.hashicorp.com/terraform/"+$version+"/terraform_"+$version+"_windows_amd64.zip"
+    $source = $terraform_baseurl+$terraform_version+"/terraform_"+$terraform_version+"_windows_amd64.zip"
     Write-Host "Installing Terraform from $source..."
     Invoke-WebRequest $source -OutFile $tempfile
-    if (-not (test-path $path))
+    if (-not (test-path $terraform_path))
     {
-        mkdir $path
+        mkdir $terraform_path
     }
     $P = [Environment]::GetEnvironmentVariable("PATH")
-    if($P -notlike "*"+$path+"*")
+    if($P -notlike "*"+$terraform_path+"*")
     {
-        [Environment]::SetEnvironmentVariable("PATH", "$P;$path")
+        [Environment]::SetEnvironmentVariable("PATH", "$P;$terraform_path")
     }
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     function Unzip
@@ -45,9 +55,10 @@ function get_terraform
         }
         [System.IO.Compression.ZipFile]::ExtractToDirectory($zipfile, $outpath)
     }
-    Unzip $tempfile $path
+    Unzip $tempfile $terraform_path
     Write-Output "Terraform version:"
     terraform --version
+  }
 }
 
 function run_terraform
